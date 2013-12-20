@@ -6,8 +6,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartDocument;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,6 +30,7 @@ public class StAXXMLCreator implements XmlCreator {
             XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
             StartDocument startDocument = eventFactory.createStartDocument();
+
             eventWriter.add(startDocument);
 
             writeChildren(eventWriter, rootDir);
@@ -48,8 +47,6 @@ public class StAXXMLCreator implements XmlCreator {
 
     private void writeChildren(XMLEventWriter writer, File rootFile) throws XMLStreamException {
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-        XMLEvent end = eventFactory.createDTD("\n");
-        XMLEvent tab = eventFactory.createDTD("\t");
 
         List<Attribute> attributes = new ArrayList<>();
         Attribute attr = eventFactory.createAttribute("name", rootFile.getName());
@@ -67,6 +64,7 @@ public class StAXXMLCreator implements XmlCreator {
             fileAttributes.add(eventFactory.createAttribute("extention", getExtention(f)));
 
             writer.add(eventFactory.createStartElement("", "", "file", fileAttributes.iterator(), null));
+            writer.add(eventFactory.createEndElement("", "", "file"));
 
         }
 
