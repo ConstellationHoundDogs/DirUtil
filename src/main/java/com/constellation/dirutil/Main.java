@@ -10,7 +10,7 @@ import java.io.File;
  */
 public class Main {
 
-    public static final String rootDir = "/home/vladimir/IdeaProjects";
+    public static final String rootDir = "/home/vladimir/Test";
 
     public static void main(String[] args) {
         new Main().run();
