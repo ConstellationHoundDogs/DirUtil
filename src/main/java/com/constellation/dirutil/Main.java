@@ -1,8 +1,6 @@
 package com.constellation.dirutil;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,34 +27,7 @@ public class Main {
             System.exit(1);
         }
 
-        for(File f : getChildrenDirs(rootDir)){
-            System.out.println(f.getName());
-        }
-
-
-
+        XmlCreator xmlCreator = new DOMXMLCreator();
+        xmlCreator.createXMLFile("XMLFile", rootDir);
     }
-
-    private List<File> getChildrenDirs(File dir){
-        List<File> dirs = new ArrayList<File>();
-        for(File f : dir.listFiles()){
-            if(f.isDirectory()){
-                dirs.add(f);
-            }
-        }
-        return dirs;
-    }
-
-    private List<File> getFiles(File dir){
-        List<File> files = new ArrayList<File>();
-        for(File f : dir.listFiles()){
-            if(f.isFile()){
-                files.add(f);
-            }
-        }
-        return files;
-    }
-
-
-
 }
