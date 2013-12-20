@@ -27,7 +27,7 @@ public class Main {
             System.exit(1);
         }
 
-        XmlCreator xmlCreator = new DOMXMLCreator();
+        XmlCreator xmlCreator = new StAXXMLCreator();
         xmlCreator.createXMLFile("XMLFile", rootDir);
     }
 }
