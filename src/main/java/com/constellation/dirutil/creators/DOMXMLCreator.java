@@ -1,5 +1,7 @@
-package com.constellation.dirutil;
+package com.constellation.dirutil.creators;
 
+import com.constellation.dirutil.vo.Dir;
+import com.constellation.dirutil.vo.FileObj;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -12,8 +14,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,19 +21,18 @@ import java.util.List;
  * Date: 12/18/13
  * Time: 9:16 PM
  */
+
 public class DOMXMLCreator implements XmlCreator {
 
     @Override
-    public void createXMLFile(String filename, File rootDir) {
+    public void createXMLFile(Dir rootDir, String filename) throws IOException {
 
         File xmlFile = new File(filename+".xml");
-        try{
-           if(!xmlFile.exists()){
-              xmlFile.createNewFile();
-           }
-        }catch(IOException e){
-           System.out.println(e.getMessage());
+
+        if(!xmlFile.exists()){
+           xmlFile.createNewFile();
         }
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
 
@@ -65,56 +64,28 @@ public class DOMXMLCreator implements XmlCreator {
         }
     }
 
-    private List<File> getChildrenDirs(File dir){
-        List<File> dirs = new ArrayList<File>();
-        for(File f : dir.listFiles()){
-            if(f.isDirectory()){
-                dirs.add(f);
-            }
-        }
-        return dirs;
-    }
 
-    private List<File> getFiles(File dir){
-        List<File> files = new ArrayList<File>();
-        for(File f : dir.listFiles()){
-            if(f.isFile()){
-                files.add(f);
-            }
-        }
-        return files;
-    }
-
-    private void createDOMModel(Document doc, File file, Element root){
+    private void createDOMModel(Document doc, Dir dir, Element root){
         Element rootElement = doc.createElement("dir");
-        rootElement.setAttribute("name", file.getName());
+        rootElement.setAttribute("name", dir.getName());
         if(doc.hasChildNodes()){
             root.appendChild(rootElement);
         }else{
             doc.appendChild(rootElement);
         }
-        for(File d : getChildrenDirs(file)){
+        for(Dir d : dir.getDirectories()){
             Element element = doc.createElement("dir");
             element.setAttribute("name", d.getName());
             createDOMModel(doc, d, rootElement);
         }
-        for(File f : getFiles(file)){
+        for(FileObj f : dir.getFiles()){
             Element fileElement = doc.createElement("file");
             fileElement.setAttribute("name", f.getName());
-            String extension = getExtention(f);
+            String extension = f.getExtension();
             fileElement.setAttribute("extention", extension);
             rootElement.appendChild(fileElement);
         }
 
     }
 
-    private String getExtention(File f) {
-        String extension = "";
-        String fileName = f.getName();
-        int i = fileName.lastIndexOf('.');
-        if (i > 0) {
-            extension = fileName.substring(i + 1);
-        }
-        return extension;
-    }
 }

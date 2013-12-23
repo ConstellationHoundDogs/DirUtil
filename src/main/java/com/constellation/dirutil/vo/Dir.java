@@ -1,9 +1,8 @@
 package com.constellation.dirutil.vo;
 
 import javax.xml.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,10 +18,10 @@ public class Dir {
     private String name;
 
     @XmlElement(name = "dir", type = Dir.class)
-    private List<Dir> directories = new ArrayList<>();
+    private Set<Dir> directories = new HashSet<>();
 
     @XmlElement(name = "file", type = FileObj.class)
-    private List<FileObj> files = new ArrayList<>();
+    private Set<FileObj> files = new HashSet<>();
 
     public String getName() {
         return name;
@@ -32,21 +31,19 @@ public class Dir {
         this.name = name;
     }
 
-    public List<Dir> getDirectories() {
+    public Set<Dir> getDirectories() {
         return directories;
     }
 
-    public void setDirectories(List<Dir> directories) {
+    public void setDirectories(Set<Dir> directories) {
         this.directories = directories;
     }
 
-    public List<FileObj> getFiles() {
+    public Set<FileObj> getFiles() {
         return files;
     }
 
-
-    public void setFiles(List<FileObj> files) {
+    public void setFiles(Set<FileObj> files) {
         this.files = files;
     }
-
 }

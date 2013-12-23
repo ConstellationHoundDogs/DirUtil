@@ -3,51 +3,48 @@ package com.constellation.dirutil;
 import com.constellation.dirutil.vo.Dir;
 import com.constellation.dirutil.vo.FileObj;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
  * User: vladimir
- * Date: 12/20/13
- * Time: 5:22 PM
+ * Date: 12/24/13
+ * Time: 12:45 AM
  */
-public class JAXBXMLCreator implements XmlCreator {
+public class Mapper {
 
-    @Override
-    public void createXMLFile(String filename, File rootDir) throws JAXBException {
-        File output = new File(filename+".xml");
-        try {
-            if(!output.exists()){
-                output.createNewFile();
-            }
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
+
+    /**
+     *
+     * @param dirName name of directory to mapped
+     * @return mapped directory
+     * @throws FileNotFoundException  - if the given fileName does not correspond to a existing directory
+     * @throws IllegalArgumentException  - if the given fileName correspond to a file
+     */
+    public Dir mapPath(String dirName) throws FileNotFoundException {
+        File rootDirFile = new File(dirName);
+
+        if(!rootDirFile.exists()){
+            throw new FileNotFoundException("The file does not exist.");
+        }
+        if(!rootDirFile.isDirectory()){
+            throw new IllegalArgumentException("The file is not a directory.");
         }
 
-        Dir startDir = new Dir();
-        startDir.setName(rootDir.getName());
-
-        addChildren(rootDir, startDir);
-
-
-            JAXBContext content = JAXBContext.newInstance(Dir.class);
-            Marshaller marshaller = content.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(startDir, output);
-
+        Dir rootDir = new Dir();
+        rootDir.setName(dirName);
+        addChildren(rootDirFile, rootDir);
+        return rootDir;
     }
+
 
     private void addChildren(File rootDir, Dir dir){
 
-        Dir newDir = new Dir();
-
         for(File f : getChildrenDirs(rootDir)){
+            Dir newDir = new Dir();
             newDir.setName(f.getName());
             dir.getDirectories().add(newDir);
             addChildren(f, newDir);
@@ -59,9 +56,7 @@ public class JAXBXMLCreator implements XmlCreator {
             file.setExtension(getExtention(f));
             dir.getFiles().add(file);
         }
-
     }
-
 
     private String getExtention(File f) {
         String extension = "";
@@ -84,7 +79,7 @@ public class JAXBXMLCreator implements XmlCreator {
     }
 
     private List<File> getFiles(File dir){
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for(File f : dir.listFiles()){
             if(f.isFile()){
                 files.add(f);

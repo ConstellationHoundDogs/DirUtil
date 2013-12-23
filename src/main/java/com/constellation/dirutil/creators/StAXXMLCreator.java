@@ -1,4 +1,7 @@
-package com.constellation.dirutil;
+package com.constellation.dirutil.creators;
+
+import com.constellation.dirutil.vo.Dir;
+import com.constellation.dirutil.vo.FileObj;
 
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
@@ -9,6 +12,7 @@ import javax.xml.stream.events.StartDocument;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +22,18 @@ import java.util.List;
  * Date: 12/20/13
  * Time: 3:45 PM
  */
+
 public class StAXXMLCreator implements XmlCreator {
+
     @Override
-    public void createXMLFile(String filename, File rootDir) {
+    public void createXMLFile(Dir rootDir, String filename) throws IOException {
 
         File outputFile = new File(filename + ".xml");
+
+
+        if(!outputFile.exists()){
+            outputFile.createNewFile();
+        }
 
         XMLOutputFactory factory = XMLOutputFactory.newFactory();
         try {
@@ -45,7 +56,7 @@ public class StAXXMLCreator implements XmlCreator {
         }
     }
 
-    private void writeChildren(XMLEventWriter writer, File rootFile) throws XMLStreamException {
+    private void writeChildren(XMLEventWriter writer, Dir rootFile) throws XMLStreamException {
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
         List<Attribute> attributes = new ArrayList<>();
@@ -54,14 +65,14 @@ public class StAXXMLCreator implements XmlCreator {
 
         writer.add(eventFactory.createStartElement("", "", "dir", attributes.iterator(), null));
 
-        for(File f : getChildrenDirs(rootFile)){
-            writeChildren(writer, f);
+        for(Dir d : rootFile.getDirectories()){
+            writeChildren(writer, d);
         }
 
-        for(File f : getFiles(rootFile)){
+        for(FileObj f : rootFile.getFiles()){
             List<Attribute> fileAttributes = new ArrayList<>();
             fileAttributes.add(eventFactory.createAttribute("name", f.getName()));
-            fileAttributes.add(eventFactory.createAttribute("extention", getExtention(f)));
+            fileAttributes.add(eventFactory.createAttribute("extention", f.getExtension()));
 
             writer.add(eventFactory.createStartElement("", "", "file", fileAttributes.iterator(), null));
             writer.add(eventFactory.createEndElement("", "", "file"));
@@ -71,33 +82,4 @@ public class StAXXMLCreator implements XmlCreator {
         writer.add(eventFactory.createEndElement("", "", "dir"));
     }
 
-    private String getExtention(File f) {
-        String extension = "";
-        String fileName = f.getName();
-        int i = fileName.lastIndexOf('.');
-        if (i > 0) {
-            extension = fileName.substring(i + 1);
-        }
-        return extension;
-    }
-
-    private List<File> getChildrenDirs(File dir){
-        List<File> dirs = new ArrayList<>();
-        for(File f : dir.listFiles()){
-            if(f.isDirectory()){
-                dirs.add(f);
-            }
-        }
-        return dirs;
-    }
-
-    private List<File> getFiles(File dir){
-        List<File> files = new ArrayList<>();
-        for(File f : dir.listFiles()){
-            if(f.isFile()){
-                files.add(f);
-            }
-        }
-        return files;
-    }
 }

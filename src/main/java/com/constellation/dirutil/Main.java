@@ -1,7 +1,13 @@
 package com.constellation.dirutil;
 
+import com.constellation.dirutil.creators.DOMXMLCreator;
+import com.constellation.dirutil.creators.StAXXMLCreator;
+import com.constellation.dirutil.creators.XmlCreator;
+import com.constellation.dirutil.vo.Dir;
+
 import javax.xml.bind.JAXBException;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,17 +24,23 @@ public class Main {
     }
 
     private void run() throws JAXBException {
-        File rootDir = new File(this.rootDir);
-        if(!rootDir.exists()){
-            System.out.println("The directory does not exist.");
-            System.exit(1);
-        }
-        if(!rootDir.isDirectory()){
-            System.out.println("The file is not directory.");
-            System.exit(1);
+
+        Mapper mapper = new Mapper();
+        Dir rootDir = null;
+        try {
+            rootDir = mapper.mapPath(this.rootDir);
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
         }
 
-        XmlCreator xmlCreator = new JAXBXMLCreator();
-        xmlCreator.createXMLFile("XMLFile", rootDir);
+        XmlCreator creator = new DOMXMLCreator();
+        try {
+            creator.createXMLFile(rootDir, "XMLFile");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
