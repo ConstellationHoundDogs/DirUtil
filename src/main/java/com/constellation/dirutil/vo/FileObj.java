@@ -7,15 +7,19 @@ package com.constellation.dirutil.vo;
  * Time: 6:38 PM
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlRootElement(name = "file")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class FileObj {
 
-    @XmlAttribute
+    @XmlAttribute(name = "name")
     private String name;
-    @XmlAttribute
+
+    @XmlAttribute(name = "extension")
     private String extension;
 
     public String getExtension() {

@@ -1,8 +1,13 @@
 package com.constellation.dirutil;
 
 import com.constellation.dirutil.vo.Dir;
+import com.constellation.dirutil.vo.FileObj;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,26 +20,44 @@ import java.util.List;
 public class JAXBXMLCreator implements XmlCreator {
 
     @Override
-    public void createXMLFile(String filename, File rootDir) {
-        File output = new File(filename);
+    public void createXMLFile(String filename, File rootDir) throws JAXBException {
+        File output = new File(filename+".xml");
+        try {
+            if(!output.exists()){
+                output.createNewFile();
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
 
         Dir startDir = new Dir();
         startDir.setName(rootDir.getName());
+
+        addChildren(rootDir, startDir);
+
+
+            JAXBContext content = JAXBContext.newInstance(Dir.class);
+            Marshaller marshaller = content.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(startDir, output);
 
     }
 
     private void addChildren(File rootDir, Dir dir){
 
+        Dir newDir = new Dir();
+
         for(File f : getChildrenDirs(rootDir)){
-            Dir newDir = new Dir();
             newDir.setName(f.getName());
-            dir.getDirs().add(newDir);
+            dir.getDirectories().add(newDir);
             addChildren(f, newDir);
         }
 
         for(File f : getFiles(rootDir)){
-
-
+            FileObj file = new FileObj();
+            file.setName(f.getName());
+            file.setExtension(getExtention(f));
+            dir.getFiles().add(file);
         }
 
     }

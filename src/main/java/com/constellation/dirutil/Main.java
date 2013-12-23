@@ -1,5 +1,6 @@
 package com.constellation.dirutil;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 
 /**
@@ -12,11 +13,11 @@ public class Main {
 
     public static final String rootDir = "/home/vladimir/IdeaProjects";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JAXBException {
         new Main().run();
     }
 
-    private void run(){
+    private void run() throws JAXBException {
         File rootDir = new File(this.rootDir);
         if(!rootDir.exists()){
             System.out.println("The directory does not exist.");
@@ -27,7 +28,7 @@ public class Main {
             System.exit(1);
         }
 
-        XmlCreator xmlCreator = new StAXXMLCreator();
+        XmlCreator xmlCreator = new JAXBXMLCreator();
         xmlCreator.createXMLFile("XMLFile", rootDir);
     }
 }

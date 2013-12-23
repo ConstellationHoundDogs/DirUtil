@@ -1,5 +1,6 @@
 package com.constellation.dirutil;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 /**
  * Created with IntelliJ IDEA.
@@ -8,5 +9,5 @@ import java.io.File;
  * Time: 1:08 PM
  */
 public interface XmlCreator {
-    public void createXMLFile(String filename, File rootDir);
+    public void createXMLFile(String filename, File rootDir) throws JAXBException;
 }

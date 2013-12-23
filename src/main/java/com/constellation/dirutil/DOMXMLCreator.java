@@ -27,7 +27,13 @@ public class DOMXMLCreator implements XmlCreator {
     public void createXMLFile(String filename, File rootDir) {
 
         File xmlFile = new File(filename+".xml");
-
+        try{
+           if(!xmlFile.exists()){
+              xmlFile.createNewFile();
+           }
+        }catch(IOException e){
+           System.out.println(e.getMessage());
+        }
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
 

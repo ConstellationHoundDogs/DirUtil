@@ -1,8 +1,6 @@
 package com.constellation.dirutil.vo;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +12,16 @@ import java.util.List;
  * Time: 6:38 PM
  */
 @XmlRootElement(name = "dir")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Dir {
 
     @XmlAttribute
     private String name;
 
-    @XmlElement
-    private List<Dir> dirs = new ArrayList<>();
+    @XmlElement(name = "dir", type = Dir.class)
+    private List<Dir> directories = new ArrayList<>();
 
-    @XmlElement
+    @XmlElement(name = "file", type = FileObj.class)
     private List<FileObj> files = new ArrayList<>();
 
     public String getName() {
@@ -33,12 +32,12 @@ public class Dir {
         this.name = name;
     }
 
-    public List<Dir> getDirs() {
-        return dirs;
+    public List<Dir> getDirectories() {
+        return directories;
     }
 
-    public void setDirs(List<Dir> dirs) {
-        this.dirs = dirs;
+    public void setDirectories(List<Dir> directories) {
+        this.directories = directories;
     }
 
     public List<FileObj> getFiles() {
