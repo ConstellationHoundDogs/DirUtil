@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class Mapper {
 
-
     /**
      *
      * @param dirName name of directory to mapped
@@ -79,7 +78,7 @@ public class Mapper {
     }
 
     private List<File> getFiles(File dir){
-        List<File> files = new ArrayList<>();
+        List<File> files = new ArrayList<File>();
         for(File f : dir.listFiles()){
             if(f.isFile()){
                 files.add(f);

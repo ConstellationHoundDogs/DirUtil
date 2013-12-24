@@ -18,10 +18,10 @@ public class Dir {
     private String name;
 
     @XmlElement(name = "dir", type = Dir.class)
-    private Set<Dir> directories = new HashSet<>();
+    private Set<Dir> directories = new HashSet<Dir>();
 
     @XmlElement(name = "file", type = FileObj.class)
-    private Set<FileObj> files = new HashSet<>();
+    private Set<FileObj> files = new HashSet<FileObj>();
 
     public String getName() {
         return name;
